@@ -1,7 +1,4 @@
-import {
-  registerUser,
-  loginUser,
-} from "../services/auth.service.js";
+import { registerUser, loginUser } from "../services/auth.service.js";
 
 export async function register(req, res, next) {
   try {
@@ -20,14 +17,11 @@ export async function login(req, res, next) {
   try {
     const { username, password } = req.body;
 
-    const { token, user } = await loginUser(
-      username,
-      password
-    );
+    const { token, user } = await loginUser(username, password);
 
     res.cookie("accessToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.COOKIE_SECURE === "true",
       sameSite: "lax",
       maxAge: 60 * 60 * 1000,
     });
@@ -42,7 +36,11 @@ export async function login(req, res, next) {
 }
 
 export function logout(req, res) {
-  res.clearCookie("accessToken");
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.COOKIE_SECURE === "true",
+    sameSite: "lax",
+  });
 
   res.json({
     message: "Logged out successfully",

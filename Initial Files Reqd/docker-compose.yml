@@ -1,0 +1,22 @@
+services:
+
+  server:
+    build:
+      context: ./node-login-register-app
+
+    env_file:
+      - ./node-login-register-app/.env.docker
+
+    expose:
+      - "8080"
+
+
+  client:
+    build:
+      context: ./react-login-register-app
+
+    ports:
+      - "3000:3000"
+
+    depends_on:
+      - server
