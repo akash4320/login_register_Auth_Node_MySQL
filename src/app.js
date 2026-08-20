@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
@@ -5,6 +6,8 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
+
+app.set("trust proxy", 1);
 
 // Middleware
 /*
@@ -16,6 +19,22 @@ app.use(helmet());
 app.use(express.json());
 
 app.use(cookieParser());
+
+const allowedOrigins = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true);
+      if (allowedOrigins.includes(origin)) return cb(null, true);
+      return cb(new Error("CORS not allowed"));
+    },
+    credentials: true,
+  }),
+);
 
 // Use the Routes here, we add first Authentication route
 app.use("/api/auth", authRoutes);
