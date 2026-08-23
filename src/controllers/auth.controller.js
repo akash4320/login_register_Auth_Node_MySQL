@@ -21,7 +21,7 @@ export async function login(req, res, next) {
 
     res.cookie("accessToken", token, {
       httpOnly: true,
-      secure: process.env.COOKIE_SECURE === "true",
+      secure: false,
       sameSite: "none",
       path: "/",
     });
