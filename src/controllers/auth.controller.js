@@ -16,21 +16,22 @@ export async function register(req, res, next) {
 export async function login(req, res, next) {
   try {
     const { username, password } = req.body;
-
+    console.log("Login request received:", { username, password });
     const { token, user } = await loginUser(username, password);
 
     res.cookie("accessToken", token, {
       httpOnly: true,
       secure: process.env.COOKIE_SECURE === "true",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 1000,
+      sameSite: "none",
+      path: "/",
     });
-
+    console.log("Login successful, token set in cookie:", token);
     res.json({
       message: "Login successful",
       user,
     });
   } catch (error) {
+    console.error("Error during login:", error);
     next(error);
   }
 }
