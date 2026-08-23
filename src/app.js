@@ -38,9 +38,6 @@ app.use(
   }),
 );
 
-// Optional: explicit preflight handler
-app.options("*", cors());
-
 app.use("/api/auth", authRoutes);
 
 export default app;
