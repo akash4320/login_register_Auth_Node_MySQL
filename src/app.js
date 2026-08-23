@@ -33,10 +33,14 @@ app.use(
       return cb(new Error("CORS not allowed"));
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
-// Use the Routes here, we add first Authentication route
+// Optional: explicit preflight handler
+app.options("*", cors());
+
 app.use("/api/auth", authRoutes);
 
 export default app;
